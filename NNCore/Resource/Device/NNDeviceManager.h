@@ -26,6 +26,7 @@ extern NSString *kNNNetworkStatusChange;
 
 @property (nonatomic, readonly) float batteryLevel;
 @property (nonatomic, readonly) UInt64 freeDiskSpace;
+@property (nonatomic, readonly) UInt64 totalDiskSpace;
 
 @property (nonatomic, readonly) float scale;
 

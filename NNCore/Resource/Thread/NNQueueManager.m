@@ -113,6 +113,10 @@ void run_block_in_main_queue_async(dispatch_block_t block) {
     dispatch_async(dispatch_get_main_queue(), block);
 }
 
+void run_block_in_main_queue_after(dispatch_block_t block, float after) {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(after * NSEC_PER_SEC)), dispatch_get_main_queue(), block);
+}
+
 void run_block_in_queue(dispatch_queue_t queue, dispatch_block_t block) {
     if (is_same_queue(queue)) {
         block();

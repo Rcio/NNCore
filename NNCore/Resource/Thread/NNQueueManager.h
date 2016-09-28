@@ -39,5 +39,6 @@ BOOL dispatch_current_queue_is_main_queue();
 BOOL dispatch_current_queue_is(dispatch_queue_t queue);
 void run_block_in_main_queue(dispatch_block_t block);
 void run_block_in_main_queue_async(dispatch_block_t block);
+void run_block_in_main_queue_after(dispatch_block_t block, float after);
 void run_block_in_queue(dispatch_queue_t queue, dispatch_block_t block);
 void run_block_in_queue_async(dispatch_queue_t queue, dispatch_block_t block);

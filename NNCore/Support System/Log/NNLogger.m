@@ -235,7 +235,7 @@ static NNLogger* sharedLogger = nil;
         _logLevel = (NN_LOG_LEVEL_WARNNING | NN_LOG_LEVEL_ERROR | NN_LOG_LEVEL_INFO);
 #else
         self.isRelease = NO;
-        _logLevel = (NN_LOG_LEVEL_DEBUG | NN_LOG_LEVEL_INFO | NN_LOG_LEVEL_WARNNING | NN_LOG_LEVEL_ERROR);
+        _logLevel = (NN_LOG_LEVEL_VERBOSE | NN_LOG_LEVEL_DEBUG | NN_LOG_LEVEL_INFO | NN_LOG_LEVEL_WARNNING | NN_LOG_LEVEL_ERROR);
 #endif
         _colorEnable = YES;
         [self prepareForLog];
@@ -458,6 +458,25 @@ static NNLogger* sharedLogger = nil;
     [self log:tag level:NN_LOG_LEVEL_ERROR content:content misc:aMisc];
 }
 
+- (void)verbose:(NSString *)tag misc:(NSString *)aMisc log:(NSString *)logStr {
+    [self log:tag level:NN_LOG_LEVEL_VERBOSE content:logStr misc:aMisc];
+}
+
+- (void)debug:(NSString *)tag misc:(NSString *)aMisc log:(NSString *)logStr {
+    [self log:tag level:NN_LOG_LEVEL_DEBUG content:logStr misc:aMisc];
+}
+
+- (void)info:(NSString *)tag misc:(NSString *)aMisc log:(NSString *)logStr {
+    [self log:tag level:NN_LOG_LEVEL_INFO content:logStr misc:aMisc];
+}
+
+- (void)warning:(NSString *)tag misc:(NSString *)aMisc log:(NSString *)logStr {
+    [self log:tag level:NN_LOG_LEVEL_WARNNING content:logStr misc:aMisc];
+}
+
+- (void)error:(NSString *)tag misc:(NSString *)aMisc log:(NSString *)logStr {
+    [self log:tag level:NN_LOG_LEVEL_ERROR content:logStr misc:aMisc];
+}
 
 #pragma mark - Helper
 
@@ -470,3 +489,6 @@ static NNLogger* sharedLogger = nil;
 }
 
 @end
+
+
+

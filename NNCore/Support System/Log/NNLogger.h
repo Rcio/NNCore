@@ -55,11 +55,19 @@ typedef NS_ENUM(NSInteger, NN_LOG_LEVEL) {
 
 + (NNLogger *)sharedLogger;
 
-- (void)verbose:(NSString*)tag misc:(NSString*)aMisc format:(NSString*)aFormat, ... NS_FORMAT_FUNCTION(3, 4);
+- (void)verbose:(NSString*)tag misc:(NSString*)aMisc format:(NSString*)aFormat;
 - (void)debug:(NSString*)tag misc:(NSString*)aMisc format:(NSString*)aFormat, ... NS_FORMAT_FUNCTION(3, 4);
 - (void)info:(NSString*)tag misc:(NSString*)aMisc format:(NSString*)aFormat, ... NS_FORMAT_FUNCTION(3, 4);
 - (void)warnning:(NSString*)tag misc:(NSString*)aMisc format:(NSString*)aFormat, ... NS_FORMAT_FUNCTION(3, 4);
 - (void)error:(NSString*)tag misc:(NSString*)aMisc format:(NSString*)aFormat, ... NS_FORMAT_FUNCTION(3, 4);
+
+// Methods for swift
+
+- (void)verbose:(NSString*)tag misc:(NSString*)aMisc log:(NSString*)logStr;
+- (void)debug:(NSString*)tag misc:(NSString*)aMisc log:(NSString*)logStr;
+- (void)info:(NSString*)tag misc:(NSString*)aMisc log:(NSString*)logStr;
+- (void)warning:(NSString*)tag misc:(NSString*)aMisc log:(NSString*)logStr;
+- (void)error:(NSString*)tag misc:(NSString*)aMisc log:(NSString*)logStr;
 
 @end
 

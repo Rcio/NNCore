@@ -24,6 +24,7 @@ NSString *kNNNetworkStatusChange = @"__kNNNetworkStatusChange__";
 
 @property (nonatomic, strong) Reachability *reachablility;
 @property (nonatomic, assign) UInt64 freeDiskSpace;
+@property (nonatomic, assign) UInt64 totalDiskSpace;
 @end
 
 @implementation NNDeviceManager
@@ -214,6 +215,16 @@ NSString *kNNNetworkStatusChange = @"__kNNNetworkStatusChange__";
 }
 
 - (UInt64)freeDiskSpace {
+    [self updateDiskSpace];
+    return _freeDiskSpace;
+}
+
+- (UInt64)totalDiskSpace {
+    [self updateDiskSpace];
+    return _totalDiskSpace;
+}
+
+- (void)updateDiskSpace {
     static time_t lastRefreshTime = 0;
     time_t now = time(NULL);
     
@@ -224,15 +235,18 @@ NSString *kNNNetworkStatusChange = @"__kNNNetworkStatusChange__";
         NSDictionary *attributesDic = [[NSFileManager defaultManager] attributesOfFileSystemForPath:[paths lastObject] error:&error];
         
         if (error) {
-            return UINT_MAX;
+            _freeDiskSpace = UINT_MAX;
+            _totalDiskSpace = UINT_MAX;
+            return;
         }
         
         if (nil != attributesDic) {
             NSNumber *freeFileSystemSizeInBytes = [attributesDic objectForKey:NSFileSystemFreeSize];
             _freeDiskSpace = [freeFileSystemSizeInBytes unsignedLongLongValue];
+            
+            NSNumber *totalFileSystemSizeInBytes = [attributesDic objectForKey:NSFileSystemSize];
+            _totalDiskSpace = [totalFileSystemSizeInBytes unsignedLongLongValue];
         }
     }
-    
-    return _freeDiskSpace;
 }
 @end
