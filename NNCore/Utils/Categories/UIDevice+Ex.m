@@ -57,14 +57,27 @@ SCNetworkReachabilityRef	reachability;
                 if (nil != interfaceName) {
                     NSString* name = [NSString stringWithUTF8String: cursor->ifa_name];
                     if ([name isEqualToString: interfaceName]) {
-                        ipAddr = [NSString stringWithUTF8String: 
-                                  inet_ntoa(((struct sockaddr_in*)cursor->ifa_addr)->sin_addr)];
+                        char addrBuf[INET_ADDRSTRLEN];
+                        if (inet_ntop(AF_INET, &((struct sockaddr_in*)cursor->ifa_addr)->sin_addr, addrBuf, (socklen_t)sizeof(addrBuf)) == NULL)
+                        {
+                            addrBuf[0] = '\0';
+                        }
+                        ipAddr = [NSString stringWithCString:addrBuf encoding:NSUTF8StringEncoding];
+//                        ipAddr = [NSString stringWithUTF8String: 
+//                                  inet_ntoa(((struct sockaddr_in*)cursor->ifa_addr)->sin_addr)];
                         break;
                     }
                 }else {
                     if (cursor->ifa_flags & IFF_UP) {
-                        ipAddr = [NSString stringWithUTF8String: 
-                                  inet_ntoa(((struct sockaddr_in*)cursor->ifa_addr)->sin_addr)];
+                        char addrBuf[INET_ADDRSTRLEN];
+                        if (inet_ntop(AF_INET, &((struct sockaddr_in*)cursor->ifa_addr)->sin_addr, addrBuf, (socklen_t)sizeof(addrBuf)) == NULL)
+                        {
+                            addrBuf[0] = '\0';
+                        }
+                        ipAddr = [NSString stringWithCString:addrBuf encoding:NSUTF8StringEncoding];
+//                        
+//                        ipAddr = [NSString stringWithUTF8String:
+//                                  inet_ntoa(((struct sockaddr_in*)cursor->ifa_addr)->sin_addr)];
                         break;
                     }
                 }
@@ -112,13 +125,40 @@ SCNetworkReachabilityRef	reachability;
 				NSString* name = [NSString stringWithUTF8String: cursor->ifa_name];
 				if ([name isEqualToString: @"en0"]) { // Wi-Fi adapter
 //                    [attrDict setObject:@"en0" forKey:WIFI_INTERFACE_NAME];
-                    [attrDict setObject:
-                            [NSString stringWithUTF8String: 
-                                         inet_ntoa(((struct sockaddr_in*)cursor->ifa_addr)->sin_addr)] forKey:WIFI_INTERFACE_ADDR];
-                    [attrDict setObject:[NSString stringWithUTF8String: 
-                                         inet_ntoa(((struct sockaddr_in*)cursor->ifa_netmask)->sin_addr)] forKey:WIFI_INTERFACE_NETMASK];
-                    [attrDict setObject:[NSString stringWithUTF8String: 
-                                         inet_ntoa(((struct sockaddr_in*)cursor->ifa_dstaddr)->sin_addr)] forKey:WIFI_INTERFACE_BROADCAST_ADDR];
+                    
+                    char addrBuf[INET_ADDRSTRLEN];
+                    
+                    memset(addrBuf, 0, sizeof(addrBuf));
+                    if (inet_ntop(AF_INET, &((struct sockaddr_in*)cursor->ifa_addr)->sin_addr, addrBuf, (socklen_t)sizeof(addrBuf)) == NULL)
+                    {
+                        addrBuf[0] = '\0';
+                    }
+                    NSString* wifiAdd = [NSString stringWithCString:addrBuf encoding:NSUTF8StringEncoding];
+                    [attrDict setObject:wifiAdd forKey:WIFI_INTERFACE_ADDR];
+                    
+                    memset(addrBuf, 0, sizeof(addrBuf));
+                    if (inet_ntop(AF_INET, &((struct sockaddr_in*)cursor->ifa_netmask)->sin_addr, addrBuf, (socklen_t)sizeof(addrBuf)) == NULL)
+                    {
+                        addrBuf[0] = '\0';
+                    }
+                    NSString* netMask = [NSString stringWithCString:addrBuf encoding:NSUTF8StringEncoding];
+                    [attrDict setObject:netMask forKey:WIFI_INTERFACE_NETMASK];
+                    
+                    memset(addrBuf, 0, sizeof(addrBuf));
+                    if (inet_ntop(AF_INET, &((struct sockaddr_in*)cursor->ifa_dstaddr)->sin_addr, addrBuf, (socklen_t)sizeof(addrBuf)) == NULL)
+                    {
+                        addrBuf[0] = '\0';
+                    }
+                    NSString* broadcast = [NSString stringWithCString:addrBuf encoding:NSUTF8StringEncoding];
+                    [attrDict setObject:broadcast forKey:WIFI_INTERFACE_BROADCAST_ADDR];
+                    
+//                    [attrDict setObject:
+//                            [NSString stringWithUTF8String:
+//                                         inet_ntoa(((struct sockaddr_in*)cursor->ifa_addr)->sin_addr)] forKey:WIFI_INTERFACE_ADDR];
+//                    [attrDict setObject:[NSString stringWithUTF8String: 
+//                                         inet_ntoa(((struct sockaddr_in*)cursor->ifa_netmask)->sin_addr)] forKey:WIFI_INTERFACE_NETMASK];
+//                    [attrDict setObject:[NSString stringWithUTF8String: 
+//                                         inet_ntoa(((struct sockaddr_in*)cursor->ifa_dstaddr)->sin_addr)] forKey:WIFI_INTERFACE_BROADCAST_ADDR];
 					break;
 				}
 			}
